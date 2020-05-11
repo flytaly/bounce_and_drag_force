@@ -39,6 +39,7 @@ const sketch = (p: p5) => {
       let weight = p5.Vector.mult(gravity, ball.mass);
       ball.applyForce(weight);
       ball.friction(frictionMag);
+      aquarium.bounce(ball);
       if (intersects(ball.getBounds(), aquarium.getBounds())) {
         ball.drag(dragC);
       } else {
@@ -48,7 +49,6 @@ const sketch = (p: p5) => {
         }
       }
       lines.forEach((line) => line.bounce(ball));
-      aquarium.bounce(ball);
       ball.update();
       ball.edges();
       ball.show();

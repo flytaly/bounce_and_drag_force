@@ -43,17 +43,18 @@ export class Ball {
   }
 
   edges() {
+    const bounce = -0.98;
     if (this.pos.y >= this.p.height - this.r) {
       this.pos.y = this.p.height - this.r;
-      this.vel.y *= -1;
+      this.vel.y *= bounce;
     }
 
     if (this.pos.x >= this.p.width - this.r) {
       this.pos.x = this.p.width - this.r;
-      this.vel.x *= -1;
+      this.vel.x *= bounce;
     } else if (this.pos.x <= this.r) {
       this.pos.x = this.r;
-      this.vel.x *= -1;
+      this.vel.x *= bounce;
     }
   }
 
