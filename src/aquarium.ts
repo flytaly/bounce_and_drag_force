@@ -12,13 +12,13 @@ export class Aquarium {
   y: number;
   borderWidth: number;
   borderLines: Line[];
-  constructor(p, width = p.width, height = p.height / 2) {
+  constructor({ p, width, height, x, y }: { p: p5; width?: number; height?: number; x?: number; y?: number }) {
     this.borderWidth = 2;
     this.p = p;
-    this.width = width;
-    this.height = height;
-    this.x = (p.width - width) / 2;
-    this.y = p.height - height - this.borderWidth;
+    this.width = width || p.width;
+    this.height = height || p.height / 2;
+    this.x = x || (p.width - width) / 2;
+    this.y = y || p.height - height - this.borderWidth;
     const left = new Line(p, this.x - this.borderWidth, this.y, this.height);
     left.rotation = (90 * Math.PI) / 180;
     left.lineWidth = this.borderWidth;
@@ -26,7 +26,7 @@ export class Aquarium {
     right.rotation = (90 * Math.PI) / 180;
     right.lineWidth = this.borderWidth;
     const bottom = new Line(p, this.x, this.y + this.height + this.borderWidth, this.width);
-    bottom.lineWidth = this.borderWidth;
+    bottom.lineWidth = 2;
     this.borderLines = [left, right, bottom];
   }
   draw() {
@@ -54,14 +54,18 @@ export class Aquarium {
           if (Math.abs(ball.vel.y) < 0.1 && Math.abs(ball.vel.x) < 0.1) {
             ball.vel.x = Math.random() * 0.02 - 0.01;
           }
-          ball.vel.y *= -0.9;
+          ball.vel.y *= -1;
           ball.pos.y = vertLine.pos.y - ball.r;
         } else {
-          ball.vel.x *= -0.9;
+          ball.vel.x *= -1;
           const posRight = Math.sign(ball.pos.x - vertLine.pos.x);
           ball.pos.x = vertLine.pos.x + posRight * ball.r;
         }
       }
     });
+    if (intersects(ballBounds, bottom.getBounds())) {
+      ball.pos.y = bottom.pos.y - Math.sign(bottom.pos.y - ball.pos.y) * ball.r;
+      ball.vel.y *= -1;
+    }
   }
 }

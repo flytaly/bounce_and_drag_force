@@ -48,8 +48,14 @@ export class Ball {
 
   edges() {
     const bounce = -0.98;
-    if (this.pos.y >= this.p.height - this.r) {
-      this.pos.y = this.p.height - this.r;
+    const bottom = this.p.height - 10;
+    const floorHoleLeft = this.p.width / 2 - 80;
+    const floorHoleRight = this.p.width / 2 + 80;
+    if (
+      this.pos.y >= bottom - this.r && //
+      (this.pos.x < floorHoleLeft || this.pos.x > floorHoleRight)
+    ) {
+      this.pos.y = bottom - this.r;
       this.vel.y *= bounce;
     }
 
@@ -64,6 +70,7 @@ export class Ball {
 
   update() {
     this.vel.add(this.acc);
+    this.vel.limit(16);
     this.pos.add(this.vel);
     this.acc.set(0, 0);
   }
