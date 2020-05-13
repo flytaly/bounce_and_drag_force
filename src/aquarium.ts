@@ -2,6 +2,7 @@ import p5 from 'p5';
 import { Line } from './line';
 import { Ball } from './ball';
 import { intersects } from './utils';
+import { Bounds } from './types';
 
 export class Aquarium {
   p: p5;
@@ -31,12 +32,12 @@ export class Aquarium {
   draw() {
     this.p.push();
     this.p.noStroke();
-    this.p.fill(100, 100, 100);
+    this.p.fill(100, 255);
     this.p.rect(this.x, this.y, this.width, this.height);
     this.p.pop();
     this.borderLines.forEach((l) => l.draw());
   }
-  getBounds() {
+  getBounds(): Bounds {
     return {
       x: this.x,
       y: this.y,
@@ -53,12 +54,12 @@ export class Aquarium {
           if (Math.abs(ball.vel.y) < 0.1 && Math.abs(ball.vel.x) < 0.1) {
             ball.vel.x = Math.random() * 0.02 - 0.01;
           }
-          ball.vel.y *= -0.7;
+          ball.vel.y *= -0.9;
           ball.pos.y = vertLine.pos.y - ball.r;
         } else {
-          ball.vel.x *= -0.7;
+          ball.vel.x *= -0.9;
           const posRight = Math.sign(ball.pos.x - vertLine.pos.x);
-          ball.pos.x = vertLine.pos.x + posRight * (ball.r + 0.1);
+          ball.pos.x = vertLine.pos.x + posRight * ball.r;
         }
       }
     });

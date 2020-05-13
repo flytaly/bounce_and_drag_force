@@ -1,6 +1,7 @@
 import p5 from 'p5';
 import { Ball } from './ball';
 import { intersects } from './utils';
+import { Bounds } from './types';
 
 export class Line {
   p: p5;
@@ -30,12 +31,13 @@ export class Line {
     this.p.translate(this.pos);
     this.p.rotate(this.rotation);
     this.p.scale(this.scale);
+    this.p.stroke(255, 255);
     this.p.strokeWeight(this.lineWidth);
     this.p.line(this.x1, this.y1, this.x2, this.y2);
     this.p.pop();
   }
 
-  getBounds() {
+  getBounds(): Bounds {
     if (this.rotation === 0) {
       const minX = Math.min(this.x1, this.x2),
         minY = Math.min(this.y1, this.y2),

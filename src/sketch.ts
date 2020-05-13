@@ -6,16 +6,22 @@ import { intersects } from './utils';
 
 const balls: Ball[] = [];
 let dragC = 0.2;
-let frictionMag = 0.1;
+let frictionMag = 0.2;
 let lines: Line[] = [];
 let aquarium: Aquarium;
 let windLines = [];
 
 const sketch = (p: p5) => {
   p.setup = () => {
-    p.createCanvas(window.innerWidth, window.innerHeight);
-    for (let i = 0; i < 50; i++) {
-      balls.push(new Ball(p, Math.random() * p.width, 10, Math.random() * 6 + 2));
+    p.createCanvas(Math.min(window.innerWidth, 800), window.innerHeight - 10);
+    let offset = 0;
+    for (let i = 0; i < 25; i++) {
+      const mass = Math.random() * 5 + 3;
+      offset = offset + p.sqrt(mass) * 20 + 80;
+      const row = Math.floor(offset / p.width);
+      const b = new Ball(p, offset % p.width, -row * 200, mass);
+      b.vel.set(Math.random() * 2 - 1, Math.random());
+      balls.push(b);
     }
 
     const l1 = new Line(p, 0, p.height / 2 - 200, 200);
@@ -43,14 +49,20 @@ const sketch = (p: p5) => {
 
     lines.forEach((line) => line.draw());
 
-    let gravity = p.createVector(0, 0.2);
-    for (let ball of balls) {
+    let gravity = p.createVector(0, 0.15);
+    for (let i = 0; i < balls.length; i++) {
+      const ball = balls[i];
       let weight = p5.Vector.mult(gravity, ball.mass);
       ball.applyForce(weight);
-      ball.friction(frictionMag);
+
       aquarium.bounce(ball);
       if (intersects(ball.getBounds(), aquarium.getBounds())) {
         ball.drag(dragC);
+        ball.opacity -= 0.004;
+        if (ball.opacity <= 0) {
+          ball.opacity = 1;
+          ball.pos.set(Math.random() * p.width, -100 * Math.random());
+        }
       } else {
         if (p.mouseIsPressed) {
           let wind = p.createVector(0.9, 0);
@@ -64,12 +76,15 @@ const sketch = (p: p5) => {
         }
       }
       lines.forEach((line) => line.bounce(ball));
+      ball.friction(frictionMag);
       ball.update();
       ball.edges();
-      ball.show();
-      if (ball.pos.y + ball.r >= p.height && Math.abs(ball.vel.y) < 1.5) {
-        ball.pos.set(Math.random() * p.width, 10);
+
+      for (let j = i + 1; j < balls.length; j++) {
+        const ball1 = balls[j];
+        ball.checkCollusion(ball1);
       }
+      ball.show();
     }
   };
 };
