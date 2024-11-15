@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                position: relative;
+                display: flex;
+                margin: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: #151515;
+                color: grey;
+            }
+            b {
+                position: absolute;
+                top: 5;
+                left: 5;
+            }
+            canvas {
+                margin: 0 auto;
+                box-shadow: 0px 0px 10px 20px rgba(100, 100, 100, 0.2);
+            }
+        </style>
+    </head>
+    <body>
+        <b>Press mouse button to apply wind</b>
+        <canvas id="canvas" />
+        <script src="src/sketch.ts" type="module"></script>
+    </body>
+</html>
